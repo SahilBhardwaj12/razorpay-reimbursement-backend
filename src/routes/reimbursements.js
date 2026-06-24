@@ -187,5 +187,75 @@ router.patch('/:id/approve', async (req, res) => {
   }
 });
 
+// ─────────────────────────────────────────────────────────────────
+// PATCH /api/reimbursements/:id/reject — Role-based rejection
+// ─────────────────────────────────────────────────────────────────
+router.patch('/:id/reject', async (req, res) => {
+  const { id: rejectorId, role } = req.user;
+  const claimId = parseInt(req.params.id, 10);
+
+  // Only RM and CFO may reject
+  if (role !== 'RM' && role !== 'CFO') {
+    return res.status(403).json({
+      status: 'error',
+      message: 'Forbidden: only RM or CFO can reject claims.',
+    });
+  }
+
+  try {
+    // ── 1. Load the claim ──────────────────────────────────────────
+    const [claim] = await db
+      .select()
+      .from(reimbursements)
+      .where(eq(reimbursements.id, claimId))
+      .limit(1);
+
+    if (!claim) {
+      return res.status(404).json({ status: 'error', message: 'Claim not found.' });
+    }
+
+    // ── 2. Lock check — cannot alter a finalised claim ─────────────
+    if (claim.status === 'APPROVED' || claim.status === 'REJECTED') {
+      return res.status(400).json({
+        status: 'error',
+        message: `Claim is already ${claim.status.toLowerCase()} and cannot be altered.`,
+      });
+    }
+
+    // ── 3. RM scope check ──────────────────────────────────────────
+    if (role === 'RM') {
+      const [employee] = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, claim.employeeId))
+        .limit(1);
+
+      if (employee.managerId !== rejectorId) {
+        return res.status(403).json({
+          status: 'error',
+          message: 'Forbidden: this employee does not report to you.',
+        });
+      }
+    }
+
+    // ── 4. Reject the claim (RM scoped above; CFO unrestricted) ────
+    const [updated] = await db
+      .update(reimbursements)
+      .set({ status: 'REJECTED' })
+      .where(eq(reimbursements.id, claimId))
+      .returning();
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Claim has been rejected.',
+      claim: updated,
+    });
+
+  } catch (error) {
+    console.error('Reject claim error:', error);
+    return res.status(500).json({ status: 'error', message: 'Internal server error.' });
+  }
+});
+
 module.exports = router;
 
