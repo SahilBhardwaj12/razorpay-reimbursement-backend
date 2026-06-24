@@ -3,6 +3,8 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const authRouter = require('./routes/auth');
 const reimbursementsRouter = require('./routes/reimbursements');
+const rolesRouter = require('./routes/roles');
+const employeesRouter = require('./routes/employees');
 
 const app = express();
 const PORT = 7002;
@@ -13,6 +15,8 @@ app.use(cookieParser());
 // Routes
 app.use('/rest/onboardings', authRouter);
 app.use('/rest/reimbursements', reimbursementsRouter);
+app.use('/rest/roles', rolesRouter);
+app.use('/rest/employees', employeesRouter);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
