@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const authRouter = require('./routes/auth');
 const reimbursementsRouter = require('./routes/reimbursements');
 
@@ -7,10 +8,11 @@ const app = express();
 const PORT = 7002;
 
 app.use(express.json());
+app.use(cookieParser());
 
 // Routes
-app.use('/api/auth', authRouter);
-app.use('/api/reimbursements', reimbursementsRouter);
+app.use('/rest/onboardings', authRouter);
+app.use('/rest/reimbursements', reimbursementsRouter);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

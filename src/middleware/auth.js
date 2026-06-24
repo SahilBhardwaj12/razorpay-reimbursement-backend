@@ -3,14 +3,11 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-key';
 
 /**
- * Middleware to verify JWT from Authorization: Bearer <token> header.
+ * Middleware to verify JWT from the 'token' HTTP-only cookie.
  * Attaches decoded payload to req.user on success.
  */
 function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.startsWith('Bearer ')
-    ? authHeader.slice(7)
-    : null;
+  const token = req.cookies?.token;
 
   if (!token) {
     return res.status(401).json({ status: 'error', message: 'Access denied. No token provided.' });
