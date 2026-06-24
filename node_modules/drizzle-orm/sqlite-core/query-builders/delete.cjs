@@ -23,7 +23,9 @@ __export(delete_exports, {
 module.exports = __toCommonJS(delete_exports);
 var import_entity = require("../../entity.cjs");
 var import_query_promise = require("../../query-promise.cjs");
+var import_selection_proxy = require("../../selection-proxy.cjs");
 var import_table = require("../table.cjs");
+var import_table2 = require("../../table.cjs");
 var import_utils = require("../../utils.cjs");
 class SQLiteDeleteBase extends import_query_promise.QueryPromise {
   constructor(table, session, dialect, withList) {
@@ -67,6 +69,26 @@ class SQLiteDeleteBase extends import_query_promise.QueryPromise {
    */
   where(where) {
     this.config.where = where;
+    return this;
+  }
+  orderBy(...columns) {
+    if (typeof columns[0] === "function") {
+      const orderBy = columns[0](
+        new Proxy(
+          this.config.table[import_table2.Table.Symbol.Columns],
+          new import_selection_proxy.SelectionProxyHandler({ sqlAliasedBehavior: "alias", sqlBehavior: "sql" })
+        )
+      );
+      const orderByArray = Array.isArray(orderBy) ? orderBy : [orderBy];
+      this.config.orderBy = orderByArray;
+    } else {
+      const orderByArray = columns;
+      this.config.orderBy = orderByArray;
+    }
+    return this;
+  }
+  limit(limit) {
+    this.config.limit = limit;
     return this;
   }
   returning(fields = this.table[import_table.SQLiteTable.Symbol.Columns]) {

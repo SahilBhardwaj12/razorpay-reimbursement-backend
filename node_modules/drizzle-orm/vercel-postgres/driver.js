@@ -1,4 +1,4 @@
-import { types } from "@vercel/postgres";
+import { sql } from "@vercel/postgres";
 import { entityKind } from "../entity.js";
 import { DefaultLogger } from "../logger.js";
 import { PgDatabase } from "../pg-core/db.js";
@@ -7,27 +7,24 @@ import {
   createTableRelationsHelpers,
   extractTablesRelationalConfig
 } from "../relations.js";
+import { isConfig } from "../utils.js";
 import { VercelPgSession } from "./session.js";
 class VercelPgDriver {
   constructor(client, dialect, options = {}) {
     this.client = client;
     this.dialect = dialect;
     this.options = options;
-    this.initMappers();
   }
   static [entityKind] = "VercelPgDriver";
   createSession(schema) {
     return new VercelPgSession(this.client, this.dialect, schema, { logger: this.options.logger });
   }
-  initMappers() {
-    types.setTypeParser(types.builtins.TIMESTAMPTZ, (val) => val);
-    types.setTypeParser(types.builtins.TIMESTAMP, (val) => val);
-    types.setTypeParser(types.builtins.DATE, (val) => val);
-    types.setTypeParser(types.builtins.INTERVAL, (val) => val);
-  }
 }
-function drizzle(client, config = {}) {
-  const dialect = new PgDialect();
+class VercelPgDatabase extends PgDatabase {
+  static [entityKind] = "VercelPgDatabase";
+}
+function construct(client, config = {}) {
+  const dialect = new PgDialect({ casing: config.casing });
   let logger;
   if (config.logger === true) {
     logger = new DefaultLogger();
@@ -48,9 +45,25 @@ function drizzle(client, config = {}) {
   }
   const driver = new VercelPgDriver(client, dialect, { logger });
   const session = driver.createSession(schema);
-  return new PgDatabase(dialect, session, schema);
+  const db = new VercelPgDatabase(dialect, session, schema);
+  db.$client = client;
+  return db;
 }
+function drizzle(...params) {
+  if (isConfig(params[0])) {
+    const { client, ...drizzleConfig } = params[0];
+    return construct(client ?? sql, drizzleConfig);
+  }
+  return construct(params[0] ?? sql, params[1]);
+}
+((drizzle2) => {
+  function mock(config) {
+    return construct({}, config);
+  }
+  drizzle2.mock = mock;
+})(drizzle || (drizzle = {}));
 export {
+  VercelPgDatabase,
   VercelPgDriver,
   drizzle
 };

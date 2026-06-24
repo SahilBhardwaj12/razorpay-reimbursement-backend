@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { PgColumn, PgColumnBuilder } from "./common.js";
 class PgBigSerial53Builder extends PgColumnBuilder {
   static [entityKind] = "PgBigSerial53Builder";
@@ -51,8 +52,9 @@ class PgBigSerial64 extends PgColumn {
     return BigInt(value);
   }
 }
-function bigserial(name, { mode }) {
-  if (mode === "number") {
+function bigserial(a, b) {
+  const { name, config } = getColumnNameAndConfig(a, b);
+  if (config.mode === "number") {
     return new PgBigSerial53Builder(name);
   }
   return new PgBigSerial64Builder(name);

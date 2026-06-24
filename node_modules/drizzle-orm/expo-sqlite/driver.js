@@ -1,3 +1,4 @@
+import { entityKind } from "../entity.js";
 import { DefaultLogger } from "../logger.js";
 import {
   createTableRelationsHelpers,
@@ -6,8 +7,11 @@ import {
 import { BaseSQLiteDatabase } from "../sqlite-core/db.js";
 import { SQLiteSyncDialect } from "../sqlite-core/dialect.js";
 import { ExpoSQLiteSession } from "./session.js";
+class ExpoSQLiteDatabase extends BaseSQLiteDatabase {
+  static [entityKind] = "ExpoSQLiteDatabase";
+}
 function drizzle(client, config = {}) {
-  const dialect = new SQLiteSyncDialect();
+  const dialect = new SQLiteSyncDialect({ casing: config.casing });
   let logger;
   if (config.logger === true) {
     logger = new DefaultLogger();
@@ -27,9 +31,12 @@ function drizzle(client, config = {}) {
     };
   }
   const session = new ExpoSQLiteSession(client, dialect, schema, { logger });
-  return new BaseSQLiteDatabase("sync", dialect, session, schema);
+  const db = new ExpoSQLiteDatabase("sync", dialect, session, schema);
+  db.$client = client;
+  return db;
 }
 export {
+  ExpoSQLiteDatabase,
   drizzle
 };
 //# sourceMappingURL=driver.js.map

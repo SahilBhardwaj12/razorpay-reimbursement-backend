@@ -24,6 +24,7 @@ __export(char_exports, {
 });
 module.exports = __toCommonJS(char_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 class MySqlCharBuilder extends import_common.MySqlColumnBuilder {
   static [import_entity.entityKind] = "MySqlCharBuilder";
@@ -48,7 +49,8 @@ class MySqlChar extends import_common.MySqlColumn {
     return this.length === void 0 ? `char` : `char(${this.length})`;
   }
 }
-function char(name, config = {}) {
+function char(a, b = {}) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   return new MySqlCharBuilder(name, config);
 }
 // Annotate the CommonJS export names for ESM import in node:

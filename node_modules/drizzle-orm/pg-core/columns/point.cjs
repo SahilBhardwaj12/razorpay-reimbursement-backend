@@ -26,6 +26,7 @@ __export(point_exports, {
 });
 module.exports = __toCommonJS(point_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 class PgPointTupleBuilder extends import_common.PgColumnBuilder {
   static [import_entity.entityKind] = "PgPointTupleBuilder";
@@ -85,7 +86,8 @@ class PgPointObject extends import_common.PgColumn {
     return `(${value.x},${value.y})`;
   }
 }
-function point(name, config) {
+function point(a, b) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   if (!config?.mode || config.mode === "tuple") {
     return new PgPointTupleBuilder(name);
   }

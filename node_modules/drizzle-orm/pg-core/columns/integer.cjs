@@ -25,7 +25,8 @@ __export(integer_exports, {
 module.exports = __toCommonJS(integer_exports);
 var import_entity = require("../../entity.cjs");
 var import_common = require("./common.cjs");
-class PgIntegerBuilder extends import_common.PgColumnBuilder {
+var import_int_common = require("./int.common.cjs");
+class PgIntegerBuilder extends import_int_common.PgIntColumnBaseBuilder {
   static [import_entity.entityKind] = "PgIntegerBuilder";
   constructor(name) {
     super(name, "number", "PgInteger");
@@ -48,7 +49,7 @@ class PgInteger extends import_common.PgColumn {
   }
 }
 function integer(name) {
-  return new PgIntegerBuilder(name);
+  return new PgIntegerBuilder(name ?? "");
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

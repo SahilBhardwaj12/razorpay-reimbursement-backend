@@ -27,6 +27,8 @@ __export(view_exports, {
   PgMaterializedViewConfig: () => PgMaterializedViewConfig,
   PgView: () => PgView,
   ViewBuilder: () => ViewBuilder,
+  isPgMaterializedView: () => isPgMaterializedView,
+  isPgView: () => isPgView,
   pgMaterializedView: () => pgMaterializedView,
   pgMaterializedViewWithSchema: () => pgMaterializedViewWithSchema,
   pgView: () => pgView,
@@ -191,7 +193,12 @@ class ManualMaterializedViewBuilder extends MaterializedViewBuilderCore {
   existing() {
     return new Proxy(
       new PgMaterializedView({
-        pgConfig: void 0,
+        pgConfig: {
+          tablespace: this.config.tablespace,
+          using: this.config.using,
+          with: this.config.with,
+          withNoData: this.config.withNoData
+        },
         config: {
           name: this.name,
           schema: this.schema,
@@ -210,7 +217,12 @@ class ManualMaterializedViewBuilder extends MaterializedViewBuilderCore {
   as(query) {
     return new Proxy(
       new PgMaterializedView({
-        pgConfig: void 0,
+        pgConfig: {
+          tablespace: this.config.tablespace,
+          using: this.config.using,
+          with: this.config.with,
+          withNoData: this.config.withNoData
+        },
         config: {
           name: this.name,
           schema: this.schema,
@@ -271,6 +283,12 @@ function pgView(name, columns) {
 function pgMaterializedView(name, columns) {
   return pgMaterializedViewWithSchema(name, columns, void 0);
 }
+function isPgView(obj) {
+  return (0, import_entity.is)(obj, PgView);
+}
+function isPgMaterializedView(obj) {
+  return (0, import_entity.is)(obj, PgMaterializedView);
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   DefaultViewBuilderCore,
@@ -282,6 +300,8 @@ function pgMaterializedView(name, columns) {
   PgMaterializedViewConfig,
   PgView,
   ViewBuilder,
+  isPgMaterializedView,
+  isPgView,
   pgMaterializedView,
   pgMaterializedViewWithSchema,
   pgView,

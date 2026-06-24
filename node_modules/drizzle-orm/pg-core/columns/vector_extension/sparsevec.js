@@ -1,4 +1,5 @@
 import { entityKind } from "../../../entity.js";
+import { getColumnNameAndConfig } from "../../../utils.js";
 import { PgColumn, PgColumnBuilder } from "../common.js";
 class PgSparseVectorBuilder extends PgColumnBuilder {
   static [entityKind] = "PgSparseVectorBuilder";
@@ -21,7 +22,8 @@ class PgSparseVector extends PgColumn {
     return `sparsevec(${this.dimensions})`;
   }
 }
-function sparsevec(name, config) {
+function sparsevec(a, b) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   return new PgSparseVectorBuilder(name, config);
 }
 export {

@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { MySqlColumn, MySqlColumnBuilder } from "./common.js";
 class MySqlTextBuilder extends MySqlColumnBuilder {
   static [entityKind] = "MySqlTextBuilder";
@@ -20,16 +21,20 @@ class MySqlText extends MySqlColumn {
     return this.textType;
   }
 }
-function text(name, config = {}) {
+function text(a, b = {}) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   return new MySqlTextBuilder(name, "text", config);
 }
-function tinytext(name, config = {}) {
+function tinytext(a, b = {}) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   return new MySqlTextBuilder(name, "tinytext", config);
 }
-function mediumtext(name, config = {}) {
+function mediumtext(a, b = {}) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   return new MySqlTextBuilder(name, "mediumtext", config);
 }
-function longtext(name, config = {}) {
+function longtext(a, b = {}) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   return new MySqlTextBuilder(name, "longtext", config);
 }
 export {

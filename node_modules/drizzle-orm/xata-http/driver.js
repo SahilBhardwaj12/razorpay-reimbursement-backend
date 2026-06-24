@@ -24,7 +24,7 @@ class XataHttpDatabase extends PgDatabase {
   static [entityKind] = "XataHttpDatabase";
 }
 function drizzle(client, config = {}) {
-  const dialect = new PgDialect();
+  const dialect = new PgDialect({ casing: config.casing });
   let logger;
   if (config.logger === true) {
     logger = new DefaultLogger();
@@ -42,11 +42,13 @@ function drizzle(client, config = {}) {
   }
   const driver = new XataHttpDriver(client, dialect, { logger });
   const session = driver.createSession(schema);
-  return new XataHttpDatabase(
+  const db = new XataHttpDatabase(
     dialect,
     session,
     schema
   );
+  db.$client = client;
+  return db;
 }
 export {
   XataHttpDatabase,

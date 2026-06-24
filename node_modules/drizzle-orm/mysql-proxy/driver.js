@@ -1,3 +1,4 @@
+import { entityKind } from "../entity.js";
 import { DefaultLogger } from "../logger.js";
 import { MySqlDatabase } from "../mysql-core/db.js";
 import { MySqlDialect } from "../mysql-core/dialect.js";
@@ -6,8 +7,11 @@ import {
   extractTablesRelationalConfig
 } from "../relations.js";
 import { MySqlRemoteSession } from "./session.js";
+class MySqlRemoteDatabase extends MySqlDatabase {
+  static [entityKind] = "MySqlRemoteDatabase";
+}
 function drizzle(callback, config = {}) {
-  const dialect = new MySqlDialect();
+  const dialect = new MySqlDialect({ casing: config.casing });
   let logger;
   if (config.logger === true) {
     logger = new DefaultLogger();
@@ -27,9 +31,10 @@ function drizzle(callback, config = {}) {
     };
   }
   const session = new MySqlRemoteSession(callback, dialect, schema, { logger });
-  return new MySqlDatabase(dialect, session, schema, "default");
+  return new MySqlRemoteDatabase(dialect, session, schema, "default");
 }
 export {
+  MySqlRemoteDatabase,
   drizzle
 };
 //# sourceMappingURL=driver.js.map

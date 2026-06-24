@@ -24,6 +24,7 @@ __export(tinyint_exports, {
 });
 module.exports = __toCommonJS(tinyint_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 class MySqlTinyIntBuilder extends import_common.MySqlColumnBuilderWithAutoIncrement {
   static [import_entity.entityKind] = "MySqlTinyIntBuilder";
@@ -51,7 +52,8 @@ class MySqlTinyInt extends import_common.MySqlColumnWithAutoIncrement {
     return value;
   }
 }
-function tinyint(name, config) {
+function tinyint(a, b) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   return new MySqlTinyIntBuilder(name, config);
 }
 // Annotate the CommonJS export names for ESM import in node:

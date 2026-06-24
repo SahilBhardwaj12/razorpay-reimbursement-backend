@@ -35,7 +35,7 @@ class SqliteRemoteDatabase extends import_db.BaseSQLiteDatabase {
   }
 }
 function drizzle(callback, batchCallback, config) {
-  const dialect = new import_dialect.SQLiteAsyncDialect();
+  const dialect = new import_dialect.SQLiteAsyncDialect({ casing: config?.casing });
   let logger;
   let _batchCallback;
   let _config = {};

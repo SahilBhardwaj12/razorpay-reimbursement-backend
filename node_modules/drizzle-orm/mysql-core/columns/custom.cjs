@@ -24,6 +24,7 @@ __export(custom_exports, {
 });
 module.exports = __toCommonJS(custom_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 class MySqlCustomColumnBuilder extends import_common.MySqlColumnBuilder {
   static [import_entity.entityKind] = "MySqlCustomColumnBuilder";
@@ -62,8 +63,9 @@ class MySqlCustomColumn extends import_common.MySqlColumn {
   }
 }
 function customType(customTypeParams) {
-  return (dbName, fieldConfig) => {
-    return new MySqlCustomColumnBuilder(dbName, fieldConfig, customTypeParams);
+  return (a, b) => {
+    const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
+    return new MySqlCustomColumnBuilder(name, config, customTypeParams);
   };
 }
 // Annotate the CommonJS export names for ESM import in node:

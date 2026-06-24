@@ -27,6 +27,7 @@ __export(text_exports, {
 });
 module.exports = __toCommonJS(text_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 class MySqlTextBuilder extends import_common.MySqlColumnBuilder {
   static [import_entity.entityKind] = "MySqlTextBuilder";
@@ -48,16 +49,20 @@ class MySqlText extends import_common.MySqlColumn {
     return this.textType;
   }
 }
-function text(name, config = {}) {
+function text(a, b = {}) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   return new MySqlTextBuilder(name, "text", config);
 }
-function tinytext(name, config = {}) {
+function tinytext(a, b = {}) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   return new MySqlTextBuilder(name, "tinytext", config);
 }
-function mediumtext(name, config = {}) {
+function mediumtext(a, b = {}) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   return new MySqlTextBuilder(name, "mediumtext", config);
 }
-function longtext(name, config = {}) {
+function longtext(a, b = {}) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   return new MySqlTextBuilder(name, "longtext", config);
 }
 // Annotate the CommonJS export names for ESM import in node:

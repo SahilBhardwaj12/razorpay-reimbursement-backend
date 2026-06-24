@@ -24,6 +24,7 @@ __export(varchar_exports, {
 });
 module.exports = __toCommonJS(varchar_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 class MySqlVarCharBuilder extends import_common.MySqlColumnBuilder {
   static [import_entity.entityKind] = "MySqlVarCharBuilder";
@@ -49,7 +50,8 @@ class MySqlVarChar extends import_common.MySqlColumn {
     return this.length === void 0 ? `varchar` : `varchar(${this.length})`;
   }
 }
-function varchar(name, config) {
+function varchar(a, b) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   return new MySqlVarCharBuilder(name, config);
 }
 // Annotate the CommonJS export names for ESM import in node:

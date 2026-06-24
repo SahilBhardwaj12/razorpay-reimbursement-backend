@@ -24,6 +24,7 @@ __export(text_exports, {
 });
 module.exports = __toCommonJS(text_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 class PgTextBuilder extends import_common.PgColumnBuilder {
   static [import_entity.entityKind] = "PgTextBuilder";
@@ -43,7 +44,8 @@ class PgText extends import_common.PgColumn {
     return "text";
   }
 }
-function text(name, config = {}) {
+function text(a, b = {}) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   return new PgTextBuilder(name, config);
 }
 // Annotate the CommonJS export names for ESM import in node:

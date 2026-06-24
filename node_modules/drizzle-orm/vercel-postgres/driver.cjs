@@ -18,6 +18,7 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var driver_exports = {};
 __export(driver_exports, {
+  VercelPgDatabase: () => VercelPgDatabase,
   VercelPgDriver: () => VercelPgDriver,
   drizzle: () => drizzle
 });
@@ -28,27 +29,24 @@ var import_logger = require("../logger.cjs");
 var import_db = require("../pg-core/db.cjs");
 var import_pg_core = require("../pg-core/index.cjs");
 var import_relations = require("../relations.cjs");
+var import_utils = require("../utils.cjs");
 var import_session = require("./session.cjs");
 class VercelPgDriver {
   constructor(client, dialect, options = {}) {
     this.client = client;
     this.dialect = dialect;
     this.options = options;
-    this.initMappers();
   }
   static [import_entity.entityKind] = "VercelPgDriver";
   createSession(schema) {
     return new import_session.VercelPgSession(this.client, this.dialect, schema, { logger: this.options.logger });
   }
-  initMappers() {
-    import_postgres.types.setTypeParser(import_postgres.types.builtins.TIMESTAMPTZ, (val) => val);
-    import_postgres.types.setTypeParser(import_postgres.types.builtins.TIMESTAMP, (val) => val);
-    import_postgres.types.setTypeParser(import_postgres.types.builtins.DATE, (val) => val);
-    import_postgres.types.setTypeParser(import_postgres.types.builtins.INTERVAL, (val) => val);
-  }
 }
-function drizzle(client, config = {}) {
-  const dialect = new import_pg_core.PgDialect();
+class VercelPgDatabase extends import_db.PgDatabase {
+  static [import_entity.entityKind] = "VercelPgDatabase";
+}
+function construct(client, config = {}) {
+  const dialect = new import_pg_core.PgDialect({ casing: config.casing });
   let logger;
   if (config.logger === true) {
     logger = new import_logger.DefaultLogger();
@@ -69,10 +67,26 @@ function drizzle(client, config = {}) {
   }
   const driver = new VercelPgDriver(client, dialect, { logger });
   const session = driver.createSession(schema);
-  return new import_db.PgDatabase(dialect, session, schema);
+  const db = new VercelPgDatabase(dialect, session, schema);
+  db.$client = client;
+  return db;
 }
+function drizzle(...params) {
+  if ((0, import_utils.isConfig)(params[0])) {
+    const { client, ...drizzleConfig } = params[0];
+    return construct(client ?? import_postgres.sql, drizzleConfig);
+  }
+  return construct(params[0] ?? import_postgres.sql, params[1]);
+}
+((drizzle2) => {
+  function mock(config) {
+    return construct({}, config);
+  }
+  drizzle2.mock = mock;
+})(drizzle || (drizzle = {}));
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  VercelPgDatabase,
   VercelPgDriver,
   drizzle
 });

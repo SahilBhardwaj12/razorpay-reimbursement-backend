@@ -1,3 +1,4 @@
+import { entityKind } from "../entity.js";
 import { DefaultLogger } from "../logger.js";
 import {
   createTableRelationsHelpers,
@@ -6,8 +7,11 @@ import {
 import { BaseSQLiteDatabase } from "../sqlite-core/db.js";
 import { SQLiteAsyncDialect } from "../sqlite-core/dialect.js";
 import { OPSQLiteSession } from "./session.js";
+class OPSQLiteDatabase extends BaseSQLiteDatabase {
+  static [entityKind] = "OPSQLiteDatabase";
+}
 function drizzle(client, config = {}) {
-  const dialect = new SQLiteAsyncDialect();
+  const dialect = new SQLiteAsyncDialect({ casing: config.casing });
   let logger;
   if (config.logger === true) {
     logger = new DefaultLogger();
@@ -27,9 +31,12 @@ function drizzle(client, config = {}) {
     };
   }
   const session = new OPSQLiteSession(client, dialect, schema, { logger });
-  return new BaseSQLiteDatabase("async", dialect, session, schema);
+  const db = new OPSQLiteDatabase("async", dialect, session, schema);
+  db.$client = client;
+  return db;
 }
 export {
+  OPSQLiteDatabase,
   drizzle
 };
 //# sourceMappingURL=driver.js.map

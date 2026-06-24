@@ -14,7 +14,7 @@ class DrizzleD1Database extends BaseSQLiteDatabase {
   }
 }
 function drizzle(client, config = {}) {
-  const dialect = new SQLiteAsyncDialect();
+  const dialect = new SQLiteAsyncDialect({ casing: config.casing });
   let logger;
   if (config.logger === true) {
     logger = new DefaultLogger();
@@ -34,7 +34,9 @@ function drizzle(client, config = {}) {
     };
   }
   const session = new SQLiteD1Session(client, dialect, schema, { logger });
-  return new DrizzleD1Database("async", dialect, session, schema);
+  const db = new DrizzleD1Database("async", dialect, session, schema);
+  db.$client = client;
+  return db;
 }
 export {
   DrizzleD1Database,

@@ -24,6 +24,7 @@ __export(halfvec_exports, {
 });
 module.exports = __toCommonJS(halfvec_exports);
 var import_entity = require("../../../entity.cjs");
+var import_utils = require("../../../utils.cjs");
 var import_common = require("../common.cjs");
 class PgHalfVectorBuilder extends import_common.PgColumnBuilder {
   static [import_entity.entityKind] = "PgHalfVectorBuilder";
@@ -52,7 +53,8 @@ class PgHalfVector extends import_common.PgColumn {
     return value.slice(1, -1).split(",").map((v) => Number.parseFloat(v));
   }
 }
-function halfvec(name, config) {
+function halfvec(a, b) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   return new PgHalfVectorBuilder(name, config);
 }
 // Annotate the CommonJS export names for ESM import in node:

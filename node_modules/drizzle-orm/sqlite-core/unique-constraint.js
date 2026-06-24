@@ -1,7 +1,7 @@
 import { entityKind } from "../entity.js";
-import { SQLiteTable } from "./table.js";
+import { TableName } from "../table.utils.js";
 function uniqueKeyName(table, columns) {
-  return `${table[SQLiteTable.Symbol.Name]}_${columns.join("_")}_unique`;
+  return `${table[TableName]}_${columns.join("_")}_unique`;
 }
 function unique(name) {
   return new UniqueOnConstraintBuilder(name);

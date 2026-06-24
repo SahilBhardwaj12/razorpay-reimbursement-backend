@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { PgColumn } from "./common.js";
 import { PgDateColumnBaseBuilder } from "./date.common.js";
 class PgDateBuilder extends PgDateColumnBaseBuilder {
@@ -42,7 +43,8 @@ class PgDateString extends PgColumn {
     return "date";
   }
 }
-function date(name, config) {
+function date(a, b) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   if (config?.mode === "date") {
     return new PgDateBuilder(name);
   }

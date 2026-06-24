@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { MySqlColumnBuilderWithAutoIncrement, MySqlColumnWithAutoIncrement } from "./common.js";
 class MySqlBigInt53Builder extends MySqlColumnBuilderWithAutoIncrement {
   static [entityKind] = "MySqlBigInt53Builder";
@@ -50,7 +51,8 @@ class MySqlBigInt64 extends MySqlColumnWithAutoIncrement {
     return BigInt(value);
   }
 }
-function bigint(name, config) {
+function bigint(a, b) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   if (config.mode === "number") {
     return new MySqlBigInt53Builder(name, config.unsigned);
   }

@@ -18,15 +18,18 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var driver_exports = {};
 __export(driver_exports, {
+  PgliteDatabase: () => PgliteDatabase,
   PgliteDriver: () => PgliteDriver,
   drizzle: () => drizzle
 });
 module.exports = __toCommonJS(driver_exports);
+var import_pglite = require("@electric-sql/pglite");
 var import_entity = require("../entity.cjs");
 var import_logger = require("../logger.cjs");
 var import_db = require("../pg-core/db.cjs");
 var import_dialect = require("../pg-core/dialect.cjs");
 var import_relations = require("../relations.cjs");
+var import_utils = require("../utils.cjs");
 var import_session = require("./session.cjs");
 class PgliteDriver {
   constructor(client, dialect, options = {}) {
@@ -39,8 +42,11 @@ class PgliteDriver {
     return new import_session.PgliteSession(this.client, this.dialect, schema, { logger: this.options.logger });
   }
 }
-function drizzle(client, config = {}) {
-  const dialect = new import_dialect.PgDialect();
+class PgliteDatabase extends import_db.PgDatabase {
+  static [import_entity.entityKind] = "PgliteDatabase";
+}
+function construct(client, config = {}) {
+  const dialect = new import_dialect.PgDialect({ casing: config.casing });
   let logger;
   if (config.logger === true) {
     logger = new import_logger.DefaultLogger();
@@ -61,10 +67,38 @@ function drizzle(client, config = {}) {
   }
   const driver = new PgliteDriver(client, dialect, { logger });
   const session = driver.createSession(schema);
-  return new import_db.PgDatabase(dialect, session, schema);
+  const db = new PgliteDatabase(dialect, session, schema);
+  db.$client = client;
+  return db;
 }
+function drizzle(...params) {
+  if (params[0] === void 0 || typeof params[0] === "string") {
+    const instance = new import_pglite.PGlite(params[0]);
+    return construct(instance, params[1]);
+  }
+  if ((0, import_utils.isConfig)(params[0])) {
+    const { connection, client, ...drizzleConfig } = params[0];
+    if (client)
+      return construct(client, drizzleConfig);
+    if (typeof connection === "object") {
+      const { dataDir, ...options } = connection;
+      const instance2 = new import_pglite.PGlite(dataDir, options);
+      return construct(instance2, drizzleConfig);
+    }
+    const instance = new import_pglite.PGlite(connection);
+    return construct(instance, drizzleConfig);
+  }
+  return construct(params[0], params[1]);
+}
+((drizzle2) => {
+  function mock(config) {
+    return construct({}, config);
+  }
+  drizzle2.mock = mock;
+})(drizzle || (drizzle = {}));
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  PgliteDatabase,
   PgliteDriver,
   drizzle
 });

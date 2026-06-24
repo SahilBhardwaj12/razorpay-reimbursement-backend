@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { MySqlColumn, MySqlColumnBuilder } from "./common.js";
 class MySqlDateBuilder extends MySqlColumnBuilder {
   static [entityKind] = "MySqlDateBuilder";
@@ -44,8 +45,9 @@ class MySqlDateString extends MySqlColumn {
     return `date`;
   }
 }
-function date(name, config = {}) {
-  if (config.mode === "string") {
+function date(a, b) {
+  const { name, config } = getColumnNameAndConfig(a, b);
+  if (config?.mode === "string") {
     return new MySqlDateStringBuilder(name);
   }
   return new MySqlDateBuilder(name);

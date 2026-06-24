@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { PgColumn } from "./common.js";
 import { PgDateColumnBaseBuilder } from "./date.common.js";
 class PgTimeBuilder extends PgDateColumnBaseBuilder {
@@ -29,7 +30,8 @@ class PgTime extends PgColumn {
     return `time${precision}${this.withTimezone ? " with time zone" : ""}`;
   }
 }
-function time(name, config = {}) {
+function time(a, b = {}) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   return new PgTimeBuilder(name, config.withTimezone ?? false, config.precision);
 }
 export {

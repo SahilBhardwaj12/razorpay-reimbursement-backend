@@ -1,10 +1,10 @@
 import { entityKind } from "../entity.js";
-import { MySqlTable } from "./table.js";
+import { TableName } from "../table.utils.js";
 function unique(name) {
   return new UniqueOnConstraintBuilder(name);
 }
 function uniqueKeyName(table, columns) {
-  return `${table[MySqlTable.Symbol.Name]}_${columns.join("_")}_unique`;
+  return `${table[TableName]}_${columns.join("_")}_unique`;
 }
 class UniqueConstraintBuilder {
   constructor(columns, name) {

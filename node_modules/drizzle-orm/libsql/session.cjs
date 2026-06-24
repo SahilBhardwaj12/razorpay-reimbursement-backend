@@ -64,6 +64,18 @@ class LibSQLSession extends import_session.SQLiteSession {
     const batchResults = await this.client.batch(builtQueries);
     return batchResults.map((result, i) => preparedQueries[i].mapResult(result, true));
   }
+  async migrate(queries) {
+    const preparedQueries = [];
+    const builtQueries = [];
+    for (const query of queries) {
+      const preparedQuery = query._prepare();
+      const builtQuery = preparedQuery.getQuery();
+      preparedQueries.push(preparedQuery);
+      builtQueries.push({ sql: builtQuery.sql, args: builtQuery.params });
+    }
+    const batchResults = await this.client.migrate(builtQueries);
+    return batchResults.map((result, i) => preparedQueries[i].mapResult(result, true));
+  }
   async transaction(transaction, _config) {
     const libsqlTx = await this.client.transaction();
     const session = new LibSQLSession(

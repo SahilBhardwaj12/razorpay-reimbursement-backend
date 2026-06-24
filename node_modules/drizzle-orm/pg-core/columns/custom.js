@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { PgColumn, PgColumnBuilder } from "./common.js";
 class PgCustomColumnBuilder extends PgColumnBuilder {
   static [entityKind] = "PgCustomColumnBuilder";
@@ -37,8 +38,9 @@ class PgCustomColumn extends PgColumn {
   }
 }
 function customType(customTypeParams) {
-  return (dbName, fieldConfig) => {
-    return new PgCustomColumnBuilder(dbName, fieldConfig, customTypeParams);
+  return (a, b) => {
+    const { name, config } = getColumnNameAndConfig(a, b);
+    return new PgCustomColumnBuilder(name, config, customTypeParams);
   };
 }
 export {

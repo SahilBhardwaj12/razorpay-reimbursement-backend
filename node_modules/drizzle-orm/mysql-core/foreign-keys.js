@@ -1,5 +1,5 @@
 import { entityKind } from "../entity.js";
-import { MySqlTable } from "./table.js";
+import { TableName } from "../table.utils.js";
 class ForeignKeyBuilder {
   static [entityKind] = "MySqlForeignKeyBuilder";
   /** @internal */
@@ -47,9 +47,9 @@ class ForeignKey {
     const columnNames = columns.map((column) => column.name);
     const foreignColumnNames = foreignColumns.map((column) => column.name);
     const chunks = [
-      this.table[MySqlTable.Symbol.Name],
+      this.table[TableName],
       ...columnNames,
-      foreignColumns[0].table[MySqlTable.Symbol.Name],
+      foreignColumns[0].table[TableName],
       ...foreignColumnNames
     ];
     return name ?? `${chunks.join("_")}_fk`;

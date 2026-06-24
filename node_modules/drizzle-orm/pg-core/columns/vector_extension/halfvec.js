@@ -1,4 +1,5 @@
 import { entityKind } from "../../../entity.js";
+import { getColumnNameAndConfig } from "../../../utils.js";
 import { PgColumn, PgColumnBuilder } from "../common.js";
 class PgHalfVectorBuilder extends PgColumnBuilder {
   static [entityKind] = "PgHalfVectorBuilder";
@@ -27,7 +28,8 @@ class PgHalfVector extends PgColumn {
     return value.slice(1, -1).split(",").map((v) => Number.parseFloat(v));
   }
 }
-function halfvec(name, config) {
+function halfvec(a, b) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   return new PgHalfVectorBuilder(name, config);
 }
 export {

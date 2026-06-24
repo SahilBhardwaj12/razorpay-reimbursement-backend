@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { PgColumn, PgColumnBuilder } from "./common.js";
 class PgIntervalBuilder extends PgColumnBuilder {
   static [entityKind] = "PgIntervalBuilder";
@@ -21,7 +22,8 @@ class PgInterval extends PgColumn {
     return `interval${fields}${precision}`;
   }
 }
-function interval(name, config = {}) {
+function interval(a, b = {}) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   return new PgIntervalBuilder(name, config);
 }
 export {

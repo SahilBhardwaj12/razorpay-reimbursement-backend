@@ -26,6 +26,7 @@ __export(bigserial_exports, {
 });
 module.exports = __toCommonJS(bigserial_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 class PgBigSerial53Builder extends import_common.PgColumnBuilder {
   static [import_entity.entityKind] = "PgBigSerial53Builder";
@@ -78,8 +79,9 @@ class PgBigSerial64 extends import_common.PgColumn {
     return BigInt(value);
   }
 }
-function bigserial(name, { mode }) {
-  if (mode === "number") {
+function bigserial(a, b) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
+  if (config.mode === "number") {
     return new PgBigSerial53Builder(name);
   }
   return new PgBigSerial64Builder(name);

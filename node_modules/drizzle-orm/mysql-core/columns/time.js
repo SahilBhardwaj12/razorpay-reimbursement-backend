@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { MySqlColumn, MySqlColumnBuilder } from "./common.js";
 class MySqlTimeBuilder extends MySqlColumnBuilder {
   static [entityKind] = "MySqlTimeBuilder";
@@ -19,7 +20,8 @@ class MySqlTime extends MySqlColumn {
     return `time${precision}`;
   }
 }
-function time(name, config) {
+function time(a, b) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   return new MySqlTimeBuilder(name, config);
 }
 export {

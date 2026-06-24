@@ -32,6 +32,7 @@ __export(integer_exports, {
 module.exports = __toCommonJS(integer_exports);
 var import_entity = require("../../entity.cjs");
 var import_sql = require("../../sql/sql.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 class SQLiteBaseIntegerBuilder extends import_common.SQLiteColumnBuilder {
   static [import_entity.entityKind] = "SQLiteBaseIntegerBuilder";
@@ -130,7 +131,8 @@ class SQLiteBoolean extends SQLiteBaseInteger {
     return value ? 1 : 0;
   }
 }
-function integer(name, config) {
+function integer(a, b) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   if (config?.mode === "timestamp" || config?.mode === "timestamp_ms") {
     return new SQLiteTimestampBuilder(name, config.mode);
   }

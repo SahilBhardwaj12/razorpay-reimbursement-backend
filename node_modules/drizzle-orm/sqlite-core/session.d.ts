@@ -63,6 +63,7 @@ export declare abstract class SQLiteSession<TResultKind extends 'sync' | 'async'
     all<T = unknown>(query: SQL): Result<TResultKind, T[]>;
     get<T = unknown>(query: SQL): Result<TResultKind, T>;
     values<T extends any[] = unknown[]>(query: SQL): Result<TResultKind, T[]>;
+    count(sql: SQL): Promise<number>;
 }
 export type Result<TKind extends 'sync' | 'async', TResult> = {
     sync: TResult;

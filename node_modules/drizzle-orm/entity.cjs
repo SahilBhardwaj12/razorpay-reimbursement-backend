@@ -37,7 +37,7 @@ function is(value, type) {
       `Class "${type.name ?? "<unknown>"}" doesn't look like a Drizzle entity. If this is incorrect and the class is provided by Drizzle, please report this as a bug.`
     );
   }
-  let cls = value.constructor;
+  let cls = Object.getPrototypeOf(value).constructor;
   if (cls) {
     while (cls) {
       if (entityKind in cls && cls[entityKind] === type[entityKind]) {

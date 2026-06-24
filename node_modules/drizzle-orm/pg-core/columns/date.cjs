@@ -26,6 +26,7 @@ __export(date_exports, {
 });
 module.exports = __toCommonJS(date_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 var import_date_common = require("./date.common.cjs");
 class PgDateBuilder extends import_date_common.PgDateColumnBaseBuilder {
@@ -69,7 +70,8 @@ class PgDateString extends import_common.PgColumn {
     return "date";
   }
 }
-function date(name, config) {
+function date(a, b) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   if (config?.mode === "date") {
     return new PgDateBuilder(name);
   }

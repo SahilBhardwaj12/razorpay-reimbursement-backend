@@ -1,3 +1,4 @@
+import { entityKind } from "../entity.js";
 import { DefaultLogger } from "../logger.js";
 import { PgDatabase } from "../pg-core/db.js";
 import { PgDialect } from "../pg-core/dialect.js";
@@ -6,7 +7,10 @@ import {
   extractTablesRelationalConfig
 } from "../relations.js";
 import { PgRemoteSession } from "./session.js";
-function drizzle(callback, config = {}, _dialect = () => new PgDialect()) {
+class PgRemoteDatabase extends PgDatabase {
+  static [entityKind] = "PgRemoteDatabase";
+}
+function drizzle(callback, config = {}, _dialect = () => new PgDialect({ casing: config.casing })) {
   const dialect = _dialect();
   let logger;
   if (config.logger === true) {
@@ -27,9 +31,10 @@ function drizzle(callback, config = {}, _dialect = () => new PgDialect()) {
     };
   }
   const session = new PgRemoteSession(callback, dialect, schema, { logger });
-  return new PgDatabase(dialect, session, schema);
+  return new PgRemoteDatabase(dialect, session, schema);
 }
 export {
+  PgRemoteDatabase,
   drizzle
 };
 //# sourceMappingURL=driver.js.map

@@ -26,8 +26,9 @@ __export(geometry_exports, {
 });
 module.exports = __toCommonJS(geometry_exports);
 var import_entity = require("../../../entity.cjs");
+var import_utils = require("../../../utils.cjs");
 var import_common = require("../common.cjs");
-var import_utils = require("./utils.cjs");
+var import_utils2 = require("./utils.cjs");
 class PgGeometryBuilder extends import_common.PgColumnBuilder {
   static [import_entity.entityKind] = "PgGeometryBuilder";
   constructor(name) {
@@ -47,7 +48,7 @@ class PgGeometry extends import_common.PgColumn {
     return "geometry(point)";
   }
   mapFromDriverValue(value) {
-    return (0, import_utils.parseEWKB)(value);
+    return (0, import_utils2.parseEWKB)(value);
   }
   mapToDriverValue(value) {
     return `point(${value[0]} ${value[1]})`;
@@ -72,14 +73,15 @@ class PgGeometryObject extends import_common.PgColumn {
     return "geometry(point)";
   }
   mapFromDriverValue(value) {
-    const parsed = (0, import_utils.parseEWKB)(value);
+    const parsed = (0, import_utils2.parseEWKB)(value);
     return { x: parsed[0], y: parsed[1] };
   }
   mapToDriverValue(value) {
     return `point(${value.x} ${value.y})`;
   }
 }
-function geometry(name, config) {
+function geometry(a, b) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   if (!config?.mode || config.mode === "tuple") {
     return new PgGeometryBuilder(name);
   }

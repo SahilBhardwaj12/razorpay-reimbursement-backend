@@ -1,6 +1,7 @@
 import { entityKind } from "../../entity.js";
-import { PgColumn, PgColumnBuilder } from "./common.js";
-class PgIntegerBuilder extends PgColumnBuilder {
+import { PgColumn } from "./common.js";
+import { PgIntColumnBaseBuilder } from "./int.common.js";
+class PgIntegerBuilder extends PgIntColumnBaseBuilder {
   static [entityKind] = "PgIntegerBuilder";
   constructor(name) {
     super(name, "number", "PgInteger");
@@ -23,7 +24,7 @@ class PgInteger extends PgColumn {
   }
 }
 function integer(name) {
-  return new PgIntegerBuilder(name);
+  return new PgIntegerBuilder(name ?? "");
 }
 export {
   PgInteger,

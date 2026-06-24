@@ -7,7 +7,7 @@ import { BaseSQLiteDatabase } from "../sqlite-core/db.js";
 import { SQLiteSyncDialect } from "../sqlite-core/dialect.js";
 import { SQLJsSession } from "./session.js";
 function drizzle(client, config = {}) {
-  const dialect = new SQLiteSyncDialect();
+  const dialect = new SQLiteSyncDialect({ casing: config.casing });
   let logger;
   if (config.logger === true) {
     logger = new DefaultLogger();

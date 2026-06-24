@@ -1,5 +1,6 @@
 import { entityKind } from "../../entity.js";
 import { sql } from "../../sql/sql.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { SQLiteColumn, SQLiteColumnBuilder } from "./common.js";
 class SQLiteBaseIntegerBuilder extends SQLiteColumnBuilder {
   static [entityKind] = "SQLiteBaseIntegerBuilder";
@@ -98,7 +99,8 @@ class SQLiteBoolean extends SQLiteBaseInteger {
     return value ? 1 : 0;
   }
 }
-function integer(name, config) {
+function integer(a, b) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   if (config?.mode === "timestamp" || config?.mode === "timestamp_ms") {
     return new SQLiteTimestampBuilder(name, config.mode);
   }

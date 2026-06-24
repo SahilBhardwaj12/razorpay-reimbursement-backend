@@ -26,6 +26,7 @@ __export(datetime_exports, {
 });
 module.exports = __toCommonJS(datetime_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 class MySqlDateTimeBuilder extends import_common.MySqlColumnBuilder {
   static [import_entity.entityKind] = "MySqlDateTimeBuilder";
@@ -85,8 +86,9 @@ class MySqlDateTimeString extends import_common.MySqlColumn {
     return `datetime${precision}`;
   }
 }
-function datetime(name, config = {}) {
-  if (config.mode === "string") {
+function datetime(a, b) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
+  if (config?.mode === "string") {
     return new MySqlDateTimeStringBuilder(name, config);
   }
   return new MySqlDateTimeBuilder(name, config);

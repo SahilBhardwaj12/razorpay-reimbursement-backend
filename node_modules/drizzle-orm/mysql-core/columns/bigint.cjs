@@ -26,6 +26,7 @@ __export(bigint_exports, {
 });
 module.exports = __toCommonJS(bigint_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 class MySqlBigInt53Builder extends import_common.MySqlColumnBuilderWithAutoIncrement {
   static [import_entity.entityKind] = "MySqlBigInt53Builder";
@@ -77,7 +78,8 @@ class MySqlBigInt64 extends import_common.MySqlColumnWithAutoIncrement {
     return BigInt(value);
   }
 }
-function bigint(name, config) {
+function bigint(a, b) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   if (config.mode === "number") {
     return new MySqlBigInt53Builder(name, config.unsigned);
   }

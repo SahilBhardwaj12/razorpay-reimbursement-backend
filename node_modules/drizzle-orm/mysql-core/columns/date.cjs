@@ -26,6 +26,7 @@ __export(date_exports, {
 });
 module.exports = __toCommonJS(date_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 class MySqlDateBuilder extends import_common.MySqlColumnBuilder {
   static [import_entity.entityKind] = "MySqlDateBuilder";
@@ -71,8 +72,9 @@ class MySqlDateString extends import_common.MySqlColumn {
     return `date`;
   }
 }
-function date(name, config = {}) {
-  if (config.mode === "string") {
+function date(a, b) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
+  if (config?.mode === "string") {
     return new MySqlDateStringBuilder(name);
   }
   return new MySqlDateBuilder(name);

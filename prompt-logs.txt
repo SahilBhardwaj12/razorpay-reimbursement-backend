@@ -1,0 +1,14 @@
+Create an initial Node.js project environment. 
+Run npm init -y in the terminal, install express 
+and dotenv, and structure the package.json file. 
+The package.json must expose three specific scripts:
+ "dev": "node src/app.js", "db:migrate", and "db:seed-data". 
+ Then, create a basic src/app.js server file that listens strictly
+ on port 7002 with a simple GET /health endpoint that
+ returns a JSON success status.
+ Prompt 2: Prompt 2: Installed Drizzle ORM, pg, and drizzle-kit. 
+          Created a complete src/db/ folder structure containing schema.js 
+          for user/reimbursement models and index.js for database initialization,
+           along with a drizzle.config.js configuration file.
+Prompt 3: Wired the active Supabase PostgreSQL connection string into the environment
+          variables and executed migrations using drizzle-kit to push tables to the live cloud database.

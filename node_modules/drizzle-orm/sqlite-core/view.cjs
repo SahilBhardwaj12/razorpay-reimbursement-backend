@@ -32,7 +32,6 @@ var import_utils = require("../utils.cjs");
 var import_query_builder = require("./query-builders/query-builder.cjs");
 var import_table = require("./table.cjs");
 var import_view_base = require("./view-base.cjs");
-var import_view_common = require("./view-common.cjs");
 class ViewBuilderCore {
   constructor(name) {
     this.name = name;
@@ -55,7 +54,7 @@ class ViewBuilder extends ViewBuilderCore {
     const aliasedSelectedFields = qb.getSelectedFields();
     return new Proxy(
       new SQLiteView({
-        sqliteConfig: this.config,
+        // sqliteConfig: this.config,
         config: {
           name: this.name,
           schema: void 0,
@@ -77,7 +76,6 @@ class ManualViewBuilder extends ViewBuilderCore {
   existing() {
     return new Proxy(
       new SQLiteView({
-        sqliteConfig: void 0,
         config: {
           name: this.name,
           schema: void 0,
@@ -96,7 +94,6 @@ class ManualViewBuilder extends ViewBuilderCore {
   as(query) {
     return new Proxy(
       new SQLiteView({
-        sqliteConfig: this.config,
         config: {
           name: this.name,
           schema: void 0,
@@ -115,11 +112,8 @@ class ManualViewBuilder extends ViewBuilderCore {
 }
 class SQLiteView extends import_view_base.SQLiteViewBase {
   static [import_entity.entityKind] = "SQLiteView";
-  /** @internal */
-  [import_view_common.SQLiteViewConfig];
-  constructor({ sqliteConfig, config }) {
+  constructor({ config }) {
     super(config);
-    this[import_view_common.SQLiteViewConfig] = sqliteConfig;
   }
 }
 function sqliteView(name, selection) {

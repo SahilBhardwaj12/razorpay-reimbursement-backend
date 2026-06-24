@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { MySqlColumnBuilderWithAutoIncrement, MySqlColumnWithAutoIncrement } from "./common.js";
 class MySqlMediumIntBuilder extends MySqlColumnBuilderWithAutoIncrement {
   static [entityKind] = "MySqlMediumIntBuilder";
@@ -26,7 +27,8 @@ class MySqlMediumInt extends MySqlColumnWithAutoIncrement {
     return value;
   }
 }
-function mediumint(name, config) {
+function mediumint(a, b) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   return new MySqlMediumIntBuilder(name, config);
 }
 export {

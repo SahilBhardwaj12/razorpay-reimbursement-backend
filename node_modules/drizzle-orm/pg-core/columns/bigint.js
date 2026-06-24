@@ -1,6 +1,8 @@
 import { entityKind } from "../../entity.js";
-import { PgColumn, PgColumnBuilder } from "./common.js";
-class PgBigInt53Builder extends PgColumnBuilder {
+import { getColumnNameAndConfig } from "../../utils.js";
+import { PgColumn } from "./common.js";
+import { PgIntColumnBaseBuilder } from "./int.common.js";
+class PgBigInt53Builder extends PgIntColumnBaseBuilder {
   static [entityKind] = "PgBigInt53Builder";
   constructor(name) {
     super(name, "number", "PgBigInt53");
@@ -22,7 +24,7 @@ class PgBigInt53 extends PgColumn {
     return Number(value);
   }
 }
-class PgBigInt64Builder extends PgColumnBuilder {
+class PgBigInt64Builder extends PgIntColumnBaseBuilder {
   static [entityKind] = "PgBigInt64Builder";
   constructor(name) {
     super(name, "bigint", "PgBigInt64");
@@ -45,7 +47,8 @@ class PgBigInt64 extends PgColumn {
     return BigInt(value);
   }
 }
-function bigint(name, config) {
+function bigint(a, b) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   if (config.mode === "number") {
     return new PgBigInt53Builder(name);
   }

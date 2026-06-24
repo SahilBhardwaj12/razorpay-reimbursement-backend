@@ -1,5 +1,6 @@
 import { entityKind } from "../entity.js";
 import { Table } from "../table.js";
+import { getSQLiteColumnBuilders } from "./columns/all.js";
 const InlineForeignKeys = Symbol.for("drizzle:SQLiteInlineForeignKeys");
 class SQLiteTable extends Table {
   static [entityKind] = "SQLiteTable";
@@ -16,9 +17,11 @@ class SQLiteTable extends Table {
 }
 function sqliteTableBase(name, columns, extraConfig, schema, baseName = name) {
   const rawTable = new SQLiteTable(name, schema, baseName);
+  const parsedColumns = typeof columns === "function" ? columns(getSQLiteColumnBuilders()) : columns;
   const builtColumns = Object.fromEntries(
-    Object.entries(columns).map(([name2, colBuilderBase]) => {
+    Object.entries(parsedColumns).map(([name2, colBuilderBase]) => {
       const colBuilder = colBuilderBase;
+      colBuilder.setName(name2);
       const column = colBuilder.build(rawTable);
       rawTable[InlineForeignKeys].push(...colBuilder.buildForeignKeys(column, rawTable));
       return [name2, column];

@@ -21,4 +21,6 @@ export declare class XataHttpDriver {
 export declare class XataHttpDatabase<TSchema extends Record<string, unknown> = Record<string, never>> extends PgDatabase<XataHttpQueryResultHKT, TSchema> {
     static readonly [entityKind]: string;
 }
-export declare function drizzle<TSchema extends Record<string, unknown> = Record<string, never>>(client: XataHttpClient, config?: DrizzleConfig<TSchema>): XataHttpDatabase<TSchema>;
+export declare function drizzle<TSchema extends Record<string, unknown> = Record<string, never>>(client: XataHttpClient, config?: DrizzleConfig<TSchema>): XataHttpDatabase<TSchema> & {
+    $client: XataHttpClient;
+};

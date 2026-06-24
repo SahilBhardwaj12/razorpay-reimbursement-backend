@@ -24,6 +24,7 @@ __export(custom_exports, {
 });
 module.exports = __toCommonJS(custom_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 class SQLiteCustomColumnBuilder extends import_common.SQLiteColumnBuilder {
   static [import_entity.entityKind] = "SQLiteCustomColumnBuilder";
@@ -62,10 +63,11 @@ class SQLiteCustomColumn extends import_common.SQLiteColumn {
   }
 }
 function customType(customTypeParams) {
-  return (dbName, fieldConfig) => {
+  return (a, b) => {
+    const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
     return new SQLiteCustomColumnBuilder(
-      dbName,
-      fieldConfig,
+      name,
+      config,
       customTypeParams
     );
   };

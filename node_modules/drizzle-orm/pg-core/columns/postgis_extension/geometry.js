@@ -1,4 +1,5 @@
 import { entityKind } from "../../../entity.js";
+import { getColumnNameAndConfig } from "../../../utils.js";
 import { PgColumn, PgColumnBuilder } from "../common.js";
 import { parseEWKB } from "./utils.js";
 class PgGeometryBuilder extends PgColumnBuilder {
@@ -52,7 +53,8 @@ class PgGeometryObject extends PgColumn {
     return `point(${value.x} ${value.y})`;
   }
 }
-function geometry(name, config) {
+function geometry(a, b) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   if (!config?.mode || config.mode === "tuple") {
     return new PgGeometryBuilder(name);
   }

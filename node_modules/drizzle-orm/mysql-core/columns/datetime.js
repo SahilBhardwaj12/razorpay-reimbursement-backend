@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { MySqlColumn, MySqlColumnBuilder } from "./common.js";
 class MySqlDateTimeBuilder extends MySqlColumnBuilder {
   static [entityKind] = "MySqlDateTimeBuilder";
@@ -58,8 +59,9 @@ class MySqlDateTimeString extends MySqlColumn {
     return `datetime${precision}`;
   }
 }
-function datetime(name, config = {}) {
-  if (config.mode === "string") {
+function datetime(a, b) {
+  const { name, config } = getColumnNameAndConfig(a, b);
+  if (config?.mode === "string") {
     return new MySqlDateTimeStringBuilder(name, config);
   }
   return new MySqlDateTimeBuilder(name, config);

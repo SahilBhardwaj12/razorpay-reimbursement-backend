@@ -16,10 +16,6 @@ class ViewBuilderCore {
     this.config.algorithm = algorithm;
     return this;
   }
-  definer(definer) {
-    this.config.definer = definer;
-    return this;
-  }
   sqlSecurity(sqlSecurity) {
     this.config.sqlSecurity = sqlSecurity;
     return this;

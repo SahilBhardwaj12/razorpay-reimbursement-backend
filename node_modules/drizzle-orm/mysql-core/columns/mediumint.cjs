@@ -24,6 +24,7 @@ __export(mediumint_exports, {
 });
 module.exports = __toCommonJS(mediumint_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 class MySqlMediumIntBuilder extends import_common.MySqlColumnBuilderWithAutoIncrement {
   static [import_entity.entityKind] = "MySqlMediumIntBuilder";
@@ -51,7 +52,8 @@ class MySqlMediumInt extends import_common.MySqlColumnWithAutoIncrement {
     return value;
   }
 }
-function mediumint(name, config) {
+function mediumint(a, b) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   return new MySqlMediumIntBuilder(name, config);
 }
 // Annotate the CommonJS export names for ESM import in node:

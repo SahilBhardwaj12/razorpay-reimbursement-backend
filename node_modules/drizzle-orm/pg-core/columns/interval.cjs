@@ -24,6 +24,7 @@ __export(interval_exports, {
 });
 module.exports = __toCommonJS(interval_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 class PgIntervalBuilder extends import_common.PgColumnBuilder {
   static [import_entity.entityKind] = "PgIntervalBuilder";
@@ -46,7 +47,8 @@ class PgInterval extends import_common.PgColumn {
     return `interval${fields}${precision}`;
   }
 }
-function interval(name, config = {}) {
+function interval(a, b = {}) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   return new PgIntervalBuilder(name, config);
 }
 // Annotate the CommonJS export names for ESM import in node:

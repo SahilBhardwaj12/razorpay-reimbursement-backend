@@ -39,6 +39,14 @@ class SQLiteColumnBuilder extends import_column_builder.ColumnBuilder {
     this.config.uniqueName = name;
     return this;
   }
+  generatedAlwaysAs(as, config) {
+    this.config.generated = {
+      as,
+      type: "always",
+      mode: config?.mode ?? "virtual"
+    };
+    return this;
+  }
   /** @internal */
   buildForeignKeys(column, table) {
     return this.foreignKeyConfigs.map(({ ref, actions }) => {

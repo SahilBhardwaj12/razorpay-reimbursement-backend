@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { PgColumn, PgColumnBuilder } from "./common.js";
 class PgPointTupleBuilder extends PgColumnBuilder {
   static [entityKind] = "PgPointTupleBuilder";
@@ -58,7 +59,8 @@ class PgPointObject extends PgColumn {
     return `(${value.x},${value.y})`;
   }
 }
-function point(name, config) {
+function point(a, b) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   if (!config?.mode || config.mode === "tuple") {
     return new PgPointTupleBuilder(name);
   }

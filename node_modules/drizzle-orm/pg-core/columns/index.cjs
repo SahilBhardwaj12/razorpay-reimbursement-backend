@@ -26,6 +26,7 @@ __reExport(columns_exports, require("./date.cjs"), module.exports);
 __reExport(columns_exports, require("./double-precision.cjs"), module.exports);
 __reExport(columns_exports, require("./enum.cjs"), module.exports);
 __reExport(columns_exports, require("./inet.cjs"), module.exports);
+__reExport(columns_exports, require("./int.common.cjs"), module.exports);
 __reExport(columns_exports, require("./integer.cjs"), module.exports);
 __reExport(columns_exports, require("./interval.cjs"), module.exports);
 __reExport(columns_exports, require("./json.cjs"), module.exports);
@@ -62,6 +63,7 @@ __reExport(columns_exports, require("./vector_extension/vector.cjs"), module.exp
   ...require("./double-precision.cjs"),
   ...require("./enum.cjs"),
   ...require("./inet.cjs"),
+  ...require("./int.common.cjs"),
   ...require("./integer.cjs"),
   ...require("./interval.cjs"),
   ...require("./json.cjs"),

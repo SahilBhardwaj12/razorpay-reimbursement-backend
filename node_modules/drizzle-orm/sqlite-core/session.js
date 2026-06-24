@@ -93,6 +93,10 @@ class SQLiteSession {
   values(query) {
     return this.prepareOneTimeQuery(this.dialect.sqlToQuery(query), void 0, "run", false).values();
   }
+  async count(sql) {
+    const result = await this.values(sql);
+    return result[0][0];
+  }
   /** @internal */
   extractRawValuesValueFromBatchResult(_result) {
     throw new Error("Not implemented");

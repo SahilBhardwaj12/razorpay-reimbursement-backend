@@ -1,5 +1,7 @@
 import { entityKind } from "../../entity.js";
 import { QueryPromise } from "../../query-promise.js";
+import { SelectionProxyHandler } from "../../selection-proxy.js";
+import { Table } from "../../table.js";
 class MySqlDeleteBase extends QueryPromise {
   constructor(table, session, dialect, withList) {
     super();
@@ -41,6 +43,26 @@ class MySqlDeleteBase extends QueryPromise {
    */
   where(where) {
     this.config.where = where;
+    return this;
+  }
+  orderBy(...columns) {
+    if (typeof columns[0] === "function") {
+      const orderBy = columns[0](
+        new Proxy(
+          this.config.table[Table.Symbol.Columns],
+          new SelectionProxyHandler({ sqlAliasedBehavior: "alias", sqlBehavior: "sql" })
+        )
+      );
+      const orderByArray = Array.isArray(orderBy) ? orderBy : [orderBy];
+      this.config.orderBy = orderByArray;
+    } else {
+      const orderByArray = columns;
+      this.config.orderBy = orderByArray;
+    }
+    return this;
+  }
+  limit(limit) {
+    this.config.limit = limit;
     return this;
   }
   /** @internal */

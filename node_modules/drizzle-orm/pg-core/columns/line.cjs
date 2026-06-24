@@ -26,6 +26,7 @@ __export(line_exports, {
 });
 module.exports = __toCommonJS(line_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
 class PgLineBuilder extends import_common.PgColumnBuilder {
   static [import_entity.entityKind] = "PgLineBuilder";
@@ -79,7 +80,8 @@ class PgLineABC extends import_common.PgColumn {
     return `{${value.a},${value.b},${value.c}}`;
   }
 }
-function line(name, config) {
+function line(a, b) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   if (!config?.mode || config.mode === "tuple") {
     return new PgLineBuilder(name);
   }

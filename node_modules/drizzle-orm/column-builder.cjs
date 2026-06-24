@@ -28,6 +28,7 @@ class ColumnBuilder {
   constructor(name, dataType, columnType) {
     this.config = {
       name,
+      keyAsName: name === "",
       notNull: false,
       default: void 0,
       hasDefault: false,
@@ -36,7 +37,8 @@ class ColumnBuilder {
       uniqueName: void 0,
       uniqueType: void 0,
       dataType,
-      columnType
+      columnType,
+      generated: void 0
     };
   }
   /**
@@ -114,6 +116,12 @@ class ColumnBuilder {
     this.config.primaryKey = true;
     this.config.notNull = true;
     return this;
+  }
+  /** @internal Sets the name of the column to the key within the table definition if a name was not given. */
+  setName(name) {
+    if (this.config.name !== "")
+      return;
+    this.config.name = name;
   }
 }
 // Annotate the CommonJS export names for ESM import in node:

@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { SQLiteColumn, SQLiteColumnBuilder } from "./common.js";
 class SQLiteCustomColumnBuilder extends SQLiteColumnBuilder {
   static [entityKind] = "SQLiteCustomColumnBuilder";
@@ -37,10 +38,11 @@ class SQLiteCustomColumn extends SQLiteColumn {
   }
 }
 function customType(customTypeParams) {
-  return (dbName, fieldConfig) => {
+  return (a, b) => {
+    const { name, config } = getColumnNameAndConfig(a, b);
     return new SQLiteCustomColumnBuilder(
-      dbName,
-      fieldConfig,
+      name,
+      config,
       customTypeParams
     );
   };

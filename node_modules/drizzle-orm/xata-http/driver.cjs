@@ -49,7 +49,7 @@ class XataHttpDatabase extends import_db.PgDatabase {
   static [import_entity.entityKind] = "XataHttpDatabase";
 }
 function drizzle(client, config = {}) {
-  const dialect = new import_dialect.PgDialect();
+  const dialect = new import_dialect.PgDialect({ casing: config.casing });
   let logger;
   if (config.logger === true) {
     logger = new import_logger.DefaultLogger();
@@ -67,11 +67,13 @@ function drizzle(client, config = {}) {
   }
   const driver = new XataHttpDriver(client, dialect, { logger });
   const session = driver.createSession(schema);
-  return new XataHttpDatabase(
+  const db = new XataHttpDatabase(
     dialect,
     session,
     schema
   );
+  db.$client = client;
+  return db;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

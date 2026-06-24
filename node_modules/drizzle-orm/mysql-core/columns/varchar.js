@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { MySqlColumn, MySqlColumnBuilder } from "./common.js";
 class MySqlVarCharBuilder extends MySqlColumnBuilder {
   static [entityKind] = "MySqlVarCharBuilder";
@@ -24,7 +25,8 @@ class MySqlVarChar extends MySqlColumn {
     return this.length === void 0 ? `varchar` : `varchar(${this.length})`;
   }
 }
-function varchar(name, config) {
+function varchar(a, b) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   return new MySqlVarCharBuilder(name, config);
 }
 export {

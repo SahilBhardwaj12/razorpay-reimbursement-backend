@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { PgColumn, PgColumnBuilder } from "./common.js";
 class PgTextBuilder extends PgColumnBuilder {
   static [entityKind] = "PgTextBuilder";
@@ -18,7 +19,8 @@ class PgText extends PgColumn {
     return "text";
   }
 }
-function text(name, config = {}) {
+function text(a, b = {}) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   return new PgTextBuilder(name, config);
 }
 export {

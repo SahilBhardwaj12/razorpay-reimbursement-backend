@@ -26,8 +26,10 @@ __export(bigint_exports, {
 });
 module.exports = __toCommonJS(bigint_exports);
 var import_entity = require("../../entity.cjs");
+var import_utils = require("../../utils.cjs");
 var import_common = require("./common.cjs");
-class PgBigInt53Builder extends import_common.PgColumnBuilder {
+var import_int_common = require("./int.common.cjs");
+class PgBigInt53Builder extends import_int_common.PgIntColumnBaseBuilder {
   static [import_entity.entityKind] = "PgBigInt53Builder";
   constructor(name) {
     super(name, "number", "PgBigInt53");
@@ -49,7 +51,7 @@ class PgBigInt53 extends import_common.PgColumn {
     return Number(value);
   }
 }
-class PgBigInt64Builder extends import_common.PgColumnBuilder {
+class PgBigInt64Builder extends import_int_common.PgIntColumnBaseBuilder {
   static [import_entity.entityKind] = "PgBigInt64Builder";
   constructor(name) {
     super(name, "bigint", "PgBigInt64");
@@ -72,7 +74,8 @@ class PgBigInt64 extends import_common.PgColumn {
     return BigInt(value);
   }
 }
-function bigint(name, config) {
+function bigint(a, b) {
+  const { name, config } = (0, import_utils.getColumnNameAndConfig)(a, b);
   if (config.mode === "number") {
     return new PgBigInt53Builder(name);
   }

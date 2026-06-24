@@ -35,7 +35,7 @@ class DrizzleD1Database extends import_db.BaseSQLiteDatabase {
   }
 }
 function drizzle(client, config = {}) {
-  const dialect = new import_dialect.SQLiteAsyncDialect();
+  const dialect = new import_dialect.SQLiteAsyncDialect({ casing: config.casing });
   let logger;
   if (config.logger === true) {
     logger = new import_logger.DefaultLogger();
@@ -55,7 +55,9 @@ function drizzle(client, config = {}) {
     };
   }
   const session = new import_session.SQLiteD1Session(client, dialect, schema, { logger });
-  return new DrizzleD1Database("async", dialect, session, schema);
+  const db = new DrizzleD1Database("async", dialect, session, schema);
+  db.$client = client;
+  return db;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

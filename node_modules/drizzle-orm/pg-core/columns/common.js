@@ -21,6 +21,14 @@ class PgColumnBuilder extends ColumnBuilder {
     this.config.uniqueType = config?.nulls;
     return this;
   }
+  generatedAlwaysAs(as) {
+    this.config.generated = {
+      as,
+      type: "always",
+      mode: "stored"
+    };
+    return this;
+  }
   /** @internal */
   buildForeignKeys(column, table) {
     return this.foreignKeyConfigs.map(({ ref, actions }) => {
@@ -125,12 +133,14 @@ class ExtraConfigColumn extends PgColumn {
 }
 class IndexedColumn {
   static [entityKind] = "IndexedColumn";
-  constructor(name, type, indexConfig) {
+  constructor(name, keyAsName, type, indexConfig) {
     this.name = name;
+    this.keyAsName = keyAsName;
     this.type = type;
     this.indexConfig = indexConfig;
   }
   name;
+  keyAsName;
   type;
   indexConfig;
 }

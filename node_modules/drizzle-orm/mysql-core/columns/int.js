@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { MySqlColumnBuilderWithAutoIncrement, MySqlColumnWithAutoIncrement } from "./common.js";
 class MySqlIntBuilder extends MySqlColumnBuilderWithAutoIncrement {
   static [entityKind] = "MySqlIntBuilder";
@@ -23,7 +24,8 @@ class MySqlInt extends MySqlColumnWithAutoIncrement {
     return value;
   }
 }
-function int(name, config) {
+function int(a, b) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   return new MySqlIntBuilder(name, config);
 }
 export {

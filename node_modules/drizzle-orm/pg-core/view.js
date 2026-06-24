@@ -1,4 +1,4 @@
-import { entityKind } from "../entity.js";
+import { entityKind, is } from "../entity.js";
 import { SelectionProxyHandler } from "../selection-proxy.js";
 import { getTableColumns } from "../utils.js";
 import { QueryBuilder } from "./query-builders/query-builder.js";
@@ -156,7 +156,12 @@ class ManualMaterializedViewBuilder extends MaterializedViewBuilderCore {
   existing() {
     return new Proxy(
       new PgMaterializedView({
-        pgConfig: void 0,
+        pgConfig: {
+          tablespace: this.config.tablespace,
+          using: this.config.using,
+          with: this.config.with,
+          withNoData: this.config.withNoData
+        },
         config: {
           name: this.name,
           schema: this.schema,
@@ -175,7 +180,12 @@ class ManualMaterializedViewBuilder extends MaterializedViewBuilderCore {
   as(query) {
     return new Proxy(
       new PgMaterializedView({
-        pgConfig: void 0,
+        pgConfig: {
+          tablespace: this.config.tablespace,
+          using: this.config.using,
+          with: this.config.with,
+          withNoData: this.config.withNoData
+        },
         config: {
           name: this.name,
           schema: this.schema,
@@ -236,6 +246,12 @@ function pgView(name, columns) {
 function pgMaterializedView(name, columns) {
   return pgMaterializedViewWithSchema(name, columns, void 0);
 }
+function isPgView(obj) {
+  return is(obj, PgView);
+}
+function isPgMaterializedView(obj) {
+  return is(obj, PgMaterializedView);
+}
 export {
   DefaultViewBuilderCore,
   ManualMaterializedViewBuilder,
@@ -246,6 +262,8 @@ export {
   PgMaterializedViewConfig,
   PgView,
   ViewBuilder,
+  isPgMaterializedView,
+  isPgView,
   pgMaterializedView,
   pgMaterializedViewWithSchema,
   pgView,

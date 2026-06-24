@@ -1,4 +1,5 @@
 import { entityKind } from "../../../entity.js";
+import { getColumnNameAndConfig } from "../../../utils.js";
 import { PgColumn, PgColumnBuilder } from "../common.js";
 class PgBinaryVectorBuilder extends PgColumnBuilder {
   static [entityKind] = "PgBinaryVectorBuilder";
@@ -21,7 +22,8 @@ class PgBinaryVector extends PgColumn {
     return `bit(${this.dimensions})`;
   }
 }
-function bit(name, config) {
+function bit(a, b) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   return new PgBinaryVectorBuilder(name, config);
 }
 export {

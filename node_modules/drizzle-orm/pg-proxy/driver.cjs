@@ -18,15 +18,20 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var driver_exports = {};
 __export(driver_exports, {
+  PgRemoteDatabase: () => PgRemoteDatabase,
   drizzle: () => drizzle
 });
 module.exports = __toCommonJS(driver_exports);
+var import_entity = require("../entity.cjs");
 var import_logger = require("../logger.cjs");
 var import_db = require("../pg-core/db.cjs");
 var import_dialect = require("../pg-core/dialect.cjs");
 var import_relations = require("../relations.cjs");
 var import_session = require("./session.cjs");
-function drizzle(callback, config = {}, _dialect = () => new import_dialect.PgDialect()) {
+class PgRemoteDatabase extends import_db.PgDatabase {
+  static [import_entity.entityKind] = "PgRemoteDatabase";
+}
+function drizzle(callback, config = {}, _dialect = () => new import_dialect.PgDialect({ casing: config.casing })) {
   const dialect = _dialect();
   let logger;
   if (config.logger === true) {
@@ -47,10 +52,11 @@ function drizzle(callback, config = {}, _dialect = () => new import_dialect.PgDi
     };
   }
   const session = new import_session.PgRemoteSession(callback, dialect, schema, { logger });
-  return new import_db.PgDatabase(dialect, session, schema);
+  return new PgRemoteDatabase(dialect, session, schema);
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  PgRemoteDatabase,
   drizzle
 });
 //# sourceMappingURL=driver.cjs.map

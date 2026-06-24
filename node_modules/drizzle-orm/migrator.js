@@ -1,18 +1,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
-import path from "node:path";
 function readMigrationFiles(config) {
-  let migrationFolderTo;
-  if (typeof config === "string") {
-    const configAsString = fs.readFileSync(path.resolve(".", config), "utf8");
-    const jsonConfig = JSON.parse(configAsString);
-    migrationFolderTo = jsonConfig.out;
-  } else {
-    migrationFolderTo = config.migrationsFolder;
-  }
-  if (!migrationFolderTo) {
-    throw new Error("no migration folder defined");
-  }
+  const migrationFolderTo = config.migrationsFolder;
   const migrationQueries = [];
   const journalPath = `${migrationFolderTo}/meta/_journal.json`;
   if (!fs.existsSync(journalPath)) {

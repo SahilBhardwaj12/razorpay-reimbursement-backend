@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { MySqlColumn, MySqlColumnBuilder } from "./common.js";
 class MySqlCustomColumnBuilder extends MySqlColumnBuilder {
   static [entityKind] = "MySqlCustomColumnBuilder";
@@ -37,8 +38,9 @@ class MySqlCustomColumn extends MySqlColumn {
   }
 }
 function customType(customTypeParams) {
-  return (dbName, fieldConfig) => {
-    return new MySqlCustomColumnBuilder(dbName, fieldConfig, customTypeParams);
+  return (a, b) => {
+    const { name, config } = getColumnNameAndConfig(a, b);
+    return new MySqlCustomColumnBuilder(name, config, customTypeParams);
   };
 }
 export {

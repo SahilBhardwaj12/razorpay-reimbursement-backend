@@ -1,4 +1,5 @@
 import { entityKind } from "../../entity.js";
+import { getColumnNameAndConfig } from "../../utils.js";
 import { MySqlColumnBuilderWithAutoIncrement, MySqlColumnWithAutoIncrement } from "./common.js";
 class MySqlRealBuilder extends MySqlColumnBuilderWithAutoIncrement {
   static [entityKind] = "MySqlRealBuilder";
@@ -26,7 +27,8 @@ class MySqlReal extends MySqlColumnWithAutoIncrement {
     }
   }
 }
-function real(name, config = {}) {
+function real(a, b = {}) {
+  const { name, config } = getColumnNameAndConfig(a, b);
   return new MySqlRealBuilder(name, config);
 }
 export {
