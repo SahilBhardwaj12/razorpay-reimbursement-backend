@@ -87,4 +87,105 @@ router.get('/', async (req, res) => {
   }
 });
 
+// ─────────────────────────────────────────────────────────────────
+// PATCH /api/reimbursements/:id/approve — Multi-level approval
+// ─────────────────────────────────────────────────────────────────
+router.patch('/:id/approve', async (req, res) => {
+  const { id: approverId, role } = req.user;
+  const claimId = parseInt(req.params.id, 10);
+
+  // Only RM and CFO may call this endpoint
+  if (role !== 'RM' && role !== 'CFO') {
+    return res.status(403).json({
+      status: 'error',
+      message: 'Forbidden: only RM or CFO can approve claims.',
+    });
+  }
+
+  try {
+    // ── 1. Load the claim ──────────────────────────────────────────
+    const [claim] = await db
+      .select()
+      .from(reimbursements)
+      .where(eq(reimbursements.id, claimId))
+      .limit(1);
+
+    if (!claim) {
+      return res.status(404).json({ status: 'error', message: 'Claim not found.' });
+    }
+
+    // Prevent re-approving an already finalised claim
+    if (claim.status === 'APPROVED' || claim.status === 'REJECTED') {
+      return res.status(400).json({
+        status: 'error',
+        message: `Claim is already ${claim.status.toLowerCase()}.`,
+      });
+    }
+
+    // ── 2. Load the employee who submitted the claim ───────────────
+    const [employee] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, claim.employeeId))
+      .limit(1);
+
+    // ── 3. RM approval ─────────────────────────────────────────────
+    if (role === 'RM') {
+      // Verify the employee actually reports to this RM
+      if (employee.managerId !== approverId) {
+        return res.status(403).json({
+          status: 'error',
+          message: 'Forbidden: this employee does not report to you.',
+        });
+      }
+
+      // Mark RM approval; status stays PENDING until CFO signs off
+      const [updated] = await db
+        .update(reimbursements)
+        .set({ approvedByRm: true })
+        .where(eq(reimbursements.id, claimId))
+        .returning();
+
+      return res.status(200).json({
+        status: 'success',
+        message: 'RM approval recorded. Awaiting CFO final approval.',
+        claim: updated,
+      });
+    }
+
+    // ── 4. CFO approval ────────────────────────────────────────────
+    if (role === 'CFO') {
+      // EMP claims require prior RM sign-off
+      if (employee.role === 'EMP' && !claim.approvedByRm) {
+        return res.status(403).json({
+          status: 'error',
+          message: 'Forbidden: EMP claim must be approved by the RM before CFO can finalise.',
+        });
+      }
+
+      // APE claims can be approved directly by CFO (no RM required)
+      const [updated] = await db
+        .update(reimbursements)
+        .set({
+          status: 'APPROVED',
+          // also stamp approvedByApe if submitter is APE, for audit clarity
+          ...(employee.role === 'APE' ? { approvedByApe: true } : {}),
+        })
+        .where(eq(reimbursements.id, claimId))
+        .returning();
+
+      return res.status(200).json({
+        status: 'success',
+        message: 'Claim fully approved by CFO.',
+        claim: updated,
+      });
+    }
+
+  } catch (error) {
+    console.error('Approve claim error:', error);
+    return res.status(500).json({ status: 'error', message: 'Internal server error.' });
+  }
+});
+
 module.exports = router;
+
