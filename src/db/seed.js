@@ -1,5 +1,5 @@
 require('dotenv').config();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { db, pool } = require('./index');
 const { users, reimbursements } = require('./schema');
 
