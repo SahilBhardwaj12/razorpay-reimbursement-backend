@@ -11,4 +11,31 @@ The package.json must expose three specific scripts:
           for user/reimbursement models and index.js for database initialization,
            along with a drizzle.config.js configuration file.
 Prompt 3: Wired the active Supabase PostgreSQL connection string into the environment
-          variables and executed migrations using drizzle-kit to push tables to the live cloud database.
+          variables and executed migrations using drizzle-kit to push tables to the 
+          live cloud database.
+Prompt 4: Created a database seeding script using Drizzle to securely hash a password 
+          using bcrypt and insert the root CFO account into the live users table.
+Prompt 5: Installed jsonwebtoken, implemented user login authentication, and set up a 
+         JWT verification middleware to protect API routes based on user roles.
+Prompt 6: Created an expanded database seeding script to populate Regional Managers, 
+        Associate Project Engineers, and standard Employees linked via foreign key
+         manager IDs.
+Prompt 7: Implemented reimbursement submission and fetching routes using Drizzle ORM,
+          protected by authentication and role-based access controls.
+Prompt 8: Implemented a robust multi-level approval PATCH endpoint handling
+         sequential approval flag states between Regional Managers and the CFO.
+Prompt 9: Implemented a rejection PATCH endpoint allowing managers and the CFO 
+          to instantly invalidate claims and lock down further status changes.
+Prompt 10: Verified the complete sequential approval and immediate rejection 
+         workflows across all organization roles via comprehensive integration scripts.
+Prompt 11: Initiated full refactoring of API routing prefixes, switched auth strategy 
+          from Bearer headers to HTTP-only cookies, and updated root credentials to
+           match strict Razorpay tester guidelines. 
+Prompt 12: Refactored authentication middleware to read and verify tokens from 
+           incoming HTTP-only request cookies instead of headers.
+Prompt 13: Created role assignment and management endpoints under 
+           /rest/roles and /rest/employees restricted strictly to the CFO.
+Prompt 14: Overhauled reimbursement routes to enforce multi-tiered state approvals 
+           (EMP -> RM -> APE -> CFO) and precise role-based visibility conditions.
+Prompt 15: Successfully executed the full 25-case compliance test suite verifying 
+           cross-role cookies, automated manager allocations, and hierarchical approval rules.
